@@ -1,6 +1,7 @@
 import 'package:RecipeApp/helper/authenticate.dart';
 import 'package:RecipeApp/helper/helperfunctions.dart';
-import 'package:RecipeApp/views/homepage.dart';
+import 'package:RecipeApp/views/screens/homepage/homepage.dart';
+
 import 'package:flutter/material.dart';
 
 void main() {
