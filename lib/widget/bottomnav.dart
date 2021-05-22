@@ -59,7 +59,7 @@ class MyBottomNavBar extends StatelessWidget {
       icon: Image.asset(
         icon,
         color: isActive ? Colors.red : Color(0xFFD1D4D4),
-        height: 22,
+        height: 25,
       ),
       onPressed: press,
     );

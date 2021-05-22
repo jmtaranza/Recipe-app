@@ -1,4 +1,8 @@
+import 'package:RecipeApp/views/feed.dart';
+import 'package:RecipeApp/views/profile.dart';
+import 'package:RecipeApp/views/publishrecipe.dart';
 import 'package:RecipeApp/views/screens/homepage/homepage.dart';
+import 'package:RecipeApp/views/search.dart';
 import 'package:flutter/material.dart';
 
 class NavItem {
@@ -37,19 +41,22 @@ class NavItems extends ChangeNotifier {
     NavItem(
       id: 2,
       icon: "assets/images/searchicon.png",
+      destination: Search(),
     ),
     NavItem(
       id: 3,
       icon: "assets/images/addlogo.png",
+      destination: PublishRecipe(),
     ),
     NavItem(
       id: 4,
       icon: "assets/images/bulletlist.png",
+      destination: Feed(),
     ),
     NavItem(
       id: 5,
       icon: "assets/images/smiley.png",
-      /* destination: ProfileScreen(), */
+      destination: Profile(),
     ),
   ];
 }
