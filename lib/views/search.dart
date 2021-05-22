@@ -1,9 +1,7 @@
 import 'package:RecipeApp/helper/authenticate.dart';
-
 import 'package:RecipeApp/services/auth.dart';
 import 'package:RecipeApp/widget/bottomnav.dart';
 import 'package:RecipeApp/widget/navitem.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,15 +17,18 @@ class _SearchState extends State<Search> {
       create: (context) => NavItems(),
       child: Scaffold(
         appBar: AppBar(
-          leading: GestureDetector(
-            onTap: () {
-              AuthService().signOut();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => Authenticate()));
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Icon(Icons.exit_to_app),
+          elevation: 0,
+          backgroundColor: Colors.grey.shade200,
+          title: TextFormField(
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              labelText: "Search for recipe",
+            ),
+            keyboardType: TextInputType.text,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(30),
             ),
           ),
         ),
