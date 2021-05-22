@@ -1,9 +1,7 @@
 import 'package:RecipeApp/helper/authenticate.dart';
-
 import 'package:RecipeApp/services/auth.dart';
 import 'package:RecipeApp/widget/bottomnav.dart';
 import 'package:RecipeApp/widget/navitem.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
