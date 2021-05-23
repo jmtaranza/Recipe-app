@@ -24,15 +24,15 @@ class DatabaseMethods {
         .getDocuments();
   }
 
-  /*  Future<bool> addChatRoom(chatRoom, chatRoomId) {
+  Future<void> addRecipe(String title, recipeData) {
     Firestore.instance
-        .collection("chatRoom")
-        .document(chatRoomId)
-        .setData(chatRoom)
+        .collection("recipe")
+        .document(title)
+        .setData(recipeData)
         .catchError((e) {
-      print(e);
+      print(e.toString());
     });
-  } */
+  }
 /* 
   getChats(String chatRoomId) async {
     return Firestore.instance
@@ -41,17 +41,6 @@ class DatabaseMethods {
         .collection("chats")
         .orderBy('time')
         .snapshots();
-  } */
-
-/*   Future<void> addMessage(String chatRoomId, chatMessageData) {
-    Firestore.instance
-        .collection("chatRoom")
-        .document(chatRoomId)
-        .collection("chats")
-        .add(chatMessageData)
-        .catchError((e) {
-      print(e.toString());
-    });
   } */
 
   /* getUserChats(String itIsMyName) async {

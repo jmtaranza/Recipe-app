@@ -31,9 +31,6 @@ class _HomepageState extends State<Homepage> {
             ),
           ),
         ),
-        body: Container(
-            /* child: chatRoomsList(), */
-            ),
         bottomNavigationBar: MyBottomNavBar(),
       ),
     );

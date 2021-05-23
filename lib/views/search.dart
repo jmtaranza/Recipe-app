@@ -17,6 +17,7 @@ class _SearchState extends State<Search> {
       create: (context) => NavItems(),
       child: Scaffold(
         appBar: AppBar(
+          leading: new Container(),
           elevation: 0,
           backgroundColor: Colors.grey.shade200,
           title: TextFormField(

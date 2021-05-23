@@ -33,17 +33,13 @@ class MyBottomNavBar extends StatelessWidget {
                 isActive: navItems.selectedIndex == index ? true : false,
                 icon: navItems.items[index].icon,
                 press: () {
-                  navItems.chnageNavIndex(index: index);
-                  // maybe destinationChacker is not needed in future because then all of our nav items have destination
-                  // But Now if we click those which dont have destination then it shows error
-                  // And this fix this problem
-                  if (navItems.items[index].destinationChecker())
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => navItems.items[index].destination,
-                      ),
-                    );
+                  navItems.chnageNavIndex(index);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => navItems.items[index].destination,
+                    ),
+                  );
                 },
               ),
             ),

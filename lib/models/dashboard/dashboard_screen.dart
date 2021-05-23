@@ -32,34 +32,6 @@ class DashboardScreen extends StatelessWidget {
                   background: LazyNetworkImage(
                       imageUrl: 'https://loremflickr.com/300/300/food'),
                 ),
-                Align(
-                  child: CustomAppBar(
-                    actions: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 15.0),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    ChangeNotifierProvider<AddRecipeProvider>(
-                                  create: (context) => AddRecipeProvider(),
-                                  child: AddRecipeScreen(),
-                                ),
-                              ),
-                            );
-                          },
-                          icon: Icon(
-                            Icons.add_circle,
-                            size: 48,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  alignment: Alignment.topCenter,
-                )
               ],
             ),
           ),
@@ -89,6 +61,27 @@ class DashboardScreen extends StatelessWidget {
             ),
           )
         ],
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(right: 15.0),
+        child: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    ChangeNotifierProvider<AddRecipeProvider>(
+                  create: (context) => AddRecipeProvider(),
+                  child: AddRecipeScreen(),
+                ),
+              ),
+            );
+          },
+          icon: Icon(
+            Icons.add_circle,
+            size: 48,
+          ),
+        ),
       ),
     );
   }
