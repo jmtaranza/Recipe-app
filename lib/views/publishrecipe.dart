@@ -106,6 +106,9 @@ class _PublishRecipeState extends State<PublishRecipe> {
     return ChangeNotifierProvider(
         create: (context) => NavItems(),
         child: Scaffold(
+          appBar: AppBar(
+            title: Text('Add Recipe'),
+          ),
           resizeToAvoidBottomInset: false,
           body: Container(
             color: Colors.white,

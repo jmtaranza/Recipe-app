@@ -1,8 +1,4 @@
 import 'package:RecipeApp/constant.dart';
-import 'package:RecipeApp/helper/authenticate.dart';
-import 'package:RecipeApp/models/post_model.dart';
-
-import 'package:RecipeApp/services/auth.dart';
 import 'package:RecipeApp/services/database.dart';
 import 'package:RecipeApp/views/createpost.dart';
 import 'package:RecipeApp/views/screens/view_post_screen.dart';
@@ -60,6 +56,7 @@ class _FeedState extends State<Feed> {
   }
 
   Widget _buildPost(index, snapshot) {
+    int timestamp = snapshot.data.documents[index].data['time'];
     return Container(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
@@ -90,37 +87,34 @@ class _FeedState extends State<Feed> {
                             ),
                           ],
                         ),
-                        child: CircleAvatar(
-                          child: ClipOval(
-                              //avatar
-                              // child: Image(
-                              //   height: 50.0,
-                              //   width: 50.0,
-                              //   image: NetworkImage(
-                              //     snapshot.data.documents[index].data['imageUrl'],
-                              //   ),
-                              //   fit: BoxFit.cover,
-                              // ),
-                              ),
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Text(
+                              snapshot.data.documents[index].data['postedBy']
+                                  .substring(0, 1),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 27,
+                                  fontFamily: 'OverpassRegular',
+                                  fontWeight: FontWeight.w300)),
                         ),
                       ),
                       title: Text(
-                        snapshot.data.documents[index].data['title'],
+                        snapshot.data.documents[index].data['postedBy'],
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       subtitle: Text(
-                        snapshot.data.documents[index].data['time'].toString(),
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.favorite_border),
-                        iconSize: 30.0,
-                        onPressed: () => print('Like post'),
+                        snapshot.data.documents[index].data['description'],
                       ),
                     ),
                     InkWell(
-                      onDoubleTap: () => print('Like post'),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -135,8 +129,9 @@ class _FeedState extends State<Feed> {
                                   .data.documents[index].data['imageUrl'],
                               postedBy: snapshot
                                   .data.documents[index].data['postedBy'],
-                              time: snapshot.data.documents[index].data['time']
-                                  .toString(),
+                              time: snapshot.data.documents[index].data['time'],
+                              likes:
+                                  snapshot.data.documents[index].data['likes'],
                             ),
                           ),
                         );
@@ -169,12 +164,9 @@ class _FeedState extends State<Feed> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            snapshot.data.documents[index].data['description'],
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.bookmark_border),
-                            iconSize: 30.0,
-                            onPressed: () => print('Save post'),
+                            DateTime.fromMillisecondsSinceEpoch(timestamp)
+                                .toString(),
+                            style: TextStyle(color: Colors.grey),
                           ),
                         ],
                       ),
@@ -194,24 +186,18 @@ class _FeedState extends State<Feed> {
     return ChangeNotifierProvider(
       create: (context) => NavItems(),
       child: Scaffold(
+        appBar: AppBar(
+          title: Text('Feed'),
+        ),
         body: Container(
           child: Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                  'Feed',
-                  style: TextStyle(fontSize: 40),
-                ),
-              ),
-              Divider(
-                thickness: 3,
-              ),
               Flexible(child: feedList()),
             ],
           ),
         ),
         floatingActionButton: GestureDetector(
+            child: InkResponse(
           onTap: () {
             Navigator.push(
               context,
@@ -220,8 +206,19 @@ class _FeedState extends State<Feed> {
               ),
             );
           },
-          child: Icon(Icons.add),
-        ),
+          child: Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.add,
+              color: Colors.black,
+            ),
+          ),
+        )),
         bottomNavigationBar: MyBottomNavBar(userName: widget.userName),
       ),
     );

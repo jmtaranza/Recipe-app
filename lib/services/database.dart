@@ -44,6 +44,27 @@ class DatabaseMethods {
     });
   }
 
+  Future<void> addComment(String title, commentData) {
+    Firestore.instance
+        .collection("feed")
+        .document(title)
+        .collection("comments")
+        .add(commentData)
+        .catchError((e) {
+      print(e.toString());
+    });
+  }
+
+  addLike(String title, likeData) async {
+    Firestore.instance
+        .collection("feed")
+        .document(title)
+        .updateData(likeData)
+        .catchError((e) {
+      print(e.toString());
+    });
+  }
+
   getUserPublications(String userName) async {
     return Firestore.instance
         .collection("recipe")
@@ -55,11 +76,15 @@ class DatabaseMethods {
     return Firestore.instance.collection("feed").snapshots();
   }
 
+  getUserFeedInfo(title) async {
+    return Firestore.instance.collection("feed").document(title).snapshots();
+  }
+
   getComments(String title) async {
     return Firestore.instance
-        .collection("chatRoom")
+        .collection("feed")
         .document(title)
-        .collection("chats")
+        .collection("comments")
         .orderBy('time')
         .snapshots();
   }

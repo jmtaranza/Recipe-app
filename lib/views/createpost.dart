@@ -70,6 +70,7 @@ class _CreatePostState extends State<CreatePost> {
       "title": title,
       "imageUrl": downloadUrl,
       "description": description,
+      "likes": 0,
       "postedBy": widget.userName,
       'time': DateTime.now().millisecondsSinceEpoch,
     };

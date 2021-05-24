@@ -1,6 +1,4 @@
 import 'package:RecipeApp/constant.dart';
-import 'package:RecipeApp/models/comment_model.dart';
-import 'package:RecipeApp/models/post_model.dart';
 import 'package:RecipeApp/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +7,8 @@ class ViewPostScreen extends StatefulWidget {
   final String userName;
   final String title;
   final String postedBy;
-  final String time;
+  final int time;
+  int likes;
   final String imageUrl;
   final String description;
 
@@ -19,14 +18,17 @@ class ViewPostScreen extends StatefulWidget {
       this.description,
       this.postedBy,
       this.time,
-      this.title});
+      this.title,
+      this.likes});
 
   @override
   _ViewPostScreenState createState() => _ViewPostScreenState();
 }
 
 class _ViewPostScreenState extends State<ViewPostScreen> {
+  int numOfComments = 0;
   Stream<QuerySnapshot> comments;
+  TextEditingController commentController = new TextEditingController();
   Widget _buildComment(index, snapshot) {
     return Padding(
       padding: EdgeInsets.all(10.0),
@@ -44,25 +46,30 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
               ),
             ],
           ),
-          child: CircleAvatar(
-            child: ClipOval(
-              child: Image(
-                height: 50.0,
-                width: 50.0,
-                image: NetworkImage(widget.imageUrl),
-                fit: BoxFit.cover,
-              ),
-            ),
+          child: Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+                color: Colors.grey, borderRadius: BorderRadius.circular(30)),
+            child: Text(
+                snapshot.data.documents[index].data['commentBy']
+                    .substring(0, 1),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 27,
+                    fontFamily: 'OverpassRegular',
+                    fontWeight: FontWeight.w300)),
           ),
         ),
         title: Text(
-          snapshot.data.documents[index].data['sendBy'],
+          snapshot.data.documents[index].data['commentBy'],
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
         subtitle: Text(
-          snapshot.data.documents[index].data['comment'],
+          snapshot.data.documents[index].data['message'],
         ),
         trailing: IconButton(
           icon: Icon(
@@ -75,6 +82,33 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
     );
   }
 
+  addComment() {
+    String message;
+    if (commentController.text.isNotEmpty) {
+      message = commentController.text;
+      Map<String, dynamic> commentData = {
+        "commentBy": Constants.myName,
+        "message": message,
+        'time': DateTime.now().millisecondsSinceEpoch,
+      };
+      DatabaseMethods().addComment(widget.title, commentData);
+
+      setState(() {
+        commentController.text = "";
+      });
+    }
+  }
+
+  addLike() async {
+    Map<String, dynamic> likeData = {
+      "likes": widget.likes + 1,
+    };
+    DatabaseMethods().addLike(widget.title, likeData);
+    setState(() {
+      widget.likes++;
+    });
+  }
+
   Widget commentMessages() {
     return StreamBuilder(
       stream: comments,
@@ -82,6 +116,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
         return snapshot.hasData
             ? ListView.builder(
                 itemCount: snapshot.data.documents.length,
+                shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return _buildComment(index, snapshot);
                 })
@@ -101,6 +136,20 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
       setState(() {
         comments = snapshots;
       });
+    });
+    update();
+  }
+
+  update() async {
+    QuerySnapshot result = await Firestore.instance
+        .collection('feed')
+        .document(widget.title)
+        .collection("comments")
+        .getDocuments();
+    List<DocumentSnapshot> result2 = result.documents;
+    setState(() {
+      numOfComments = result2.length;
+      print(numOfComments);
     });
   }
 
@@ -137,50 +186,20 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                             ),
                             Container(
                               width: MediaQuery.of(context).size.width * 0.8,
-                              child: ListTile(
-                                leading: Container(
-                                  width: 50.0,
-                                  height: 50.0,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black45,
-                                        offset: Offset(0, 2),
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: CircleAvatar(
-                                    child: ClipOval(
-                                        // child: Image(
-                                        //   height: 50.0,
-                                        //   width: 50.0,
-                                        //   image: AssetImage(
-                                        //       widget.post.authorImageUrl),
-                                        //   fit: BoxFit.cover,
-                                        // ),
-                                        ),
-                                  ),
-                                ),
-                                title: Text(
-                                  widget.postedBy,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text(widget.time),
-                                trailing: IconButton(
-                                  icon: Icon(Icons.more_horiz),
-                                  color: Colors.black,
-                                  onPressed: () => print('More'),
+                              child: Text(
+                                widget.postedBy + "'s post",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
                           ],
                         ),
                         InkWell(
-                          onDoubleTap: () => print('Like post'),
+                          onDoubleTap: () {
+                            addLike();
+                            update();
+                          },
                           child: Container(
                             margin: EdgeInsets.all(10.0),
                             width: double.infinity,
@@ -201,6 +220,25 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                             ),
                           ),
                         ),
+                        Column(
+                          children: <Widget>[
+                            Container(
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      widget.postedBy,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      widget.description,
+                                    )
+                                  ],
+                                )),
+                          ],
+                        ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0),
                           child: Row(
@@ -211,12 +249,14 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                   Row(
                                     children: <Widget>[
                                       IconButton(
-                                        icon: Icon(Icons.favorite_border),
-                                        iconSize: 30.0,
-                                        onPressed: () => print('Like post'),
-                                      ),
+                                          icon: Icon(Icons.favorite_border),
+                                          iconSize: 30.0,
+                                          onPressed: () {
+                                            addLike();
+                                            update();
+                                          }),
                                       Text(
-                                        '2,515',
+                                        widget.likes.toString(),
                                         style: TextStyle(
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.w600,
@@ -235,7 +275,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                         },
                                       ),
                                       Text(
-                                        '350',
+                                        numOfComments.toString(),
                                         style: TextStyle(
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.w600,
@@ -261,19 +301,16 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
             ),
             SizedBox(height: 10.0),
             Container(
-              width: double.infinity,
-              height: 600.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0),
+                width: double.infinity,
+                height: 600.0,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
+                  ),
                 ),
-              ),
-              child: ListView(
-                children: <Widget>[commentMessages()],
-              ),
-            )
+                child: commentMessages())
           ],
         ),
       ),
@@ -298,6 +335,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
           child: Padding(
             padding: EdgeInsets.all(12.0),
             child: TextField(
+              controller: commentController,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 enabledBorder: OutlineInputBorder(
@@ -343,7 +381,10 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     color: Color(0xFF23B66F),
-                    onPressed: () => print('Post comment'),
+                    onPressed: () {
+                      addComment();
+                      update();
+                    },
                     child: Icon(
                       Icons.send,
                       size: 25.0,
