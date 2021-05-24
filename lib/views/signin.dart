@@ -48,11 +48,15 @@ class _SignInState extends State<SignIn> {
               userInfoSnapshot.documents[0].data["userEmail"]);
 
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Homepage()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Homepage(
+                        userName:
+                            userInfoSnapshot.documents[0].data["userName"],
+                      )));
         } else {
           setState(() {
             isLoading = false;
-            //show snackbar
           });
         }
       });

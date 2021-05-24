@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MyBottomNavBar extends StatelessWidget {
-  const MyBottomNavBar({
+  final String userName;
+  MyBottomNavBar({
     Key key,
+    this.userName,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Consumer<NavItems>(

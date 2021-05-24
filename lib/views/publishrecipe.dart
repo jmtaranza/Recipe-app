@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'package:RecipeApp/helper/authenticate.dart';
-import 'package:RecipeApp/services/auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'package:RecipeApp/widget/navitem.dart';
@@ -12,6 +10,8 @@ import '../services/database.dart';
 import '../widget/bottomnav.dart';
 
 class PublishRecipe extends StatefulWidget {
+  final String userName;
+  PublishRecipe({this.userName});
   @override
   _PublishRecipeState createState() => _PublishRecipeState();
 }
@@ -50,46 +50,46 @@ class _PublishRecipeState extends State<PublishRecipe> {
   }
 
   Future uploadImageToFirebase(BuildContext context) async {
-    String fileName = basename(_imageFile.path);
-    StorageReference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child('uploads/$fileName');
-    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_imageFile);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-    taskSnapshot.ref.getDownloadURL().then((value) => print("Done: $value"));
-    downloadUrl = await taskSnapshot.ref.getDownloadURL();
-    print(downloadUrl);
-    setState(() {
-      _imageFile = null;
-    });
-  }
-
-  addRecipe() async {
     if (formKey.currentState.validate()) {
       setState(() {
         isLoading = true;
       });
-      title = titleController.text;
-      category = dropdownValue;
-
-      for (int i = 0; i < ingredients; i++) {
-        ingredientList.add({
-          "ingredient": _ingredientControllers[i].text,
-          "amount": _amountControllers[i].text
-        });
-      }
-      for (int i = 0; i < steps; i++) {
-        stepList.add(_stepControllers[i].text);
-      }
-      Map<String, dynamic> recipeData = {
-        "ingredients": FieldValue.arrayUnion(ingredientList),
-        "steps": FieldValue.arrayUnion(stepList),
-        "category": category,
-        'time': DateTime.now().millisecondsSinceEpoch,
-      };
-      DatabaseMethods().addRecipe(title, recipeData);
-      print(ingredientList);
-      print(stepList);
+      String fileName = basename(_imageFile.path);
+      StorageReference firebaseStorageRef =
+          FirebaseStorage.instance.ref().child('uploads/$fileName');
+      StorageUploadTask uploadTask = firebaseStorageRef.putFile(_imageFile);
+      StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+      taskSnapshot.ref.getDownloadURL().then((value) => print("Done: $value"));
+      downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      addRecipe();
     }
+  }
+
+  addRecipe() async {
+    title = titleController.text;
+    category = dropdownValue;
+    for (int i = 0; i < ingredients; i++) {
+      ingredientList.add({
+        "ingredient": _ingredientControllers[i].text,
+        "amount": _amountControllers[i].text
+      });
+    }
+    for (int i = 0; i < steps; i++) {
+      stepList.add(_stepControllers[i].text);
+    }
+    Map<String, dynamic> recipeData = {
+      "title": title,
+      "imageUrl": downloadUrl,
+      "ingredients": FieldValue.arrayUnion(ingredientList),
+      "steps": FieldValue.arrayUnion(stepList),
+      "category": category,
+      "publishedBy": widget.userName,
+      'time': DateTime.now().millisecondsSinceEpoch,
+    };
+    DatabaseMethods().addRecipe(title, recipeData);
+    print(ingredientList);
+    print(stepList);
+    print(downloadUrl);
   }
 
   String dropdownValue = 'Breakfast';
@@ -165,7 +165,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
               ],
             ),
           ),
-          bottomNavigationBar: MyBottomNavBar(),
+          bottomNavigationBar: MyBottomNavBar(userName: widget.userName),
         ));
   }
 
@@ -400,8 +400,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
                       ),
                     ),
                     onPressed: () {
-                      if (formKey.currentState.validate() && isLoading == true)
-                        title = titleController.text;
+                      title = titleController.text;
                       showDialog<String>(
                         context: context,
                         builder: (BuildContext context) => AlertDialog(
@@ -416,8 +415,9 @@ class _PublishRecipeState extends State<PublishRecipe> {
                             RaisedButton(
                               onPressed: () {
                                 Navigator.pop(context, 'OK');
-                                addRecipe();
+                                uploadImageToFirebase(context);
                                 if (isLoading == true) {
+                                  print('image printed');
                                   showDialog<String>(
                                     context: context,
                                     builder: (BuildContext context) =>
@@ -434,7 +434,9 @@ class _PublishRecipeState extends State<PublishRecipe> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        PublishRecipe()),
+                                                        PublishRecipe(
+                                                            userName: widget
+                                                                .userName)),
                                               );
                                             }
                                           },

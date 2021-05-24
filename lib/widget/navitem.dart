@@ -4,6 +4,7 @@ import 'package:RecipeApp/views/publishrecipe.dart';
 import 'package:RecipeApp/views/screens/homepage/homepage.dart';
 import 'package:RecipeApp/views/search.dart';
 import 'package:flutter/material.dart';
+import '../constant.dart';
 
 class NavItem {
   final int id;
@@ -28,27 +29,27 @@ class NavItems extends ChangeNotifier {
     NavItem(
       id: 1,
       icon: "assets/images/homepage.png",
-      destination: Homepage(),
+      destination: Homepage(userName: Constants.myName),
     ),
     NavItem(
       id: 2,
       icon: "assets/images/searchicon.png",
-      destination: Search(),
+      destination: Search(userName: Constants.myName),
     ),
     NavItem(
       id: 3,
       icon: "assets/images/addlogo.png",
-      destination: PublishRecipe(),
+      destination: PublishRecipe(userName: Constants.myName),
     ),
     NavItem(
       id: 4,
       icon: "assets/images/bulletlist.png",
-      destination: Feed(),
+      destination: Feed(userName: Constants.myName),
     ),
     NavItem(
       id: 5,
       icon: "assets/images/smiley.png",
-      destination: Profile(),
+      destination: Profile(userName: Constants.myName),
     ),
   ];
 }

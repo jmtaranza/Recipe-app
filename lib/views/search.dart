@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Search extends StatefulWidget {
+  final String userName;
+
+  Search({this.userName});
   @override
   _SearchState createState() => _SearchState();
 }
@@ -36,7 +39,7 @@ class _SearchState extends State<Search> {
           ),
         ),
         body: Container(),
-        bottomNavigationBar: MyBottomNavBar(),
+        bottomNavigationBar: MyBottomNavBar(userName: widget.userName),
       ),
     );
   }

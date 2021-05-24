@@ -33,20 +33,11 @@ class DatabaseMethods {
       print(e.toString());
     });
   }
-/* 
-  getChats(String chatRoomId) async {
-    return Firestore.instance
-        .collection("chatRoom")
-        .document(chatRoomId)
-        .collection("chats")
-        .orderBy('time')
-        .snapshots();
-  } */
 
-  /* getUserChats(String itIsMyName) async {
-    return await Firestore.instance
-        .collection("chatRoom")
-        .where('users', arrayContains: itIsMyName)
+  getUserPublications(String userName) async {
+    return Firestore.instance
+        .collection("recipe")
+        .where('publishedBy', isEqualTo: userName)
         .snapshots();
-  } */
+  }
 }

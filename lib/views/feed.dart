@@ -10,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Feed extends StatefulWidget {
+  final String userName;
+
+  Feed({this.userName});
   @override
   _FeedState createState() => _FeedState();
 }
@@ -161,7 +164,7 @@ class _FeedState extends State<Feed> {
             ],
           ),
         ),
-        bottomNavigationBar: MyBottomNavBar(),
+        bottomNavigationBar: MyBottomNavBar(userName: widget.userName),
       ),
     );
   }
