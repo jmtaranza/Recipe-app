@@ -35,7 +35,9 @@ class _ProfileState extends State<Profile> {
             width: MediaQuery.of(context).size.width - 240.0,
             height: MediaQuery.of(context).size.height - 50.0,
             decoration: BoxDecoration(
-                color: Colors.grey,
+                image: DecorationImage(
+                  image: AssetImage("assets/images/pizzafries.jpg"),
+                ),
                 borderRadius: BorderRadius.all(Radius.circular(20))),
           )),
     );
@@ -65,7 +67,9 @@ class _ProfileState extends State<Profile> {
             width: MediaQuery.of(context).size.width - 240.0,
             height: MediaQuery.of(context).size.height - 50.0,
             decoration: BoxDecoration(
-                color: Colors.grey,
+                image: DecorationImage(
+                  image: AssetImage("assets/images/ramen.jpg"),
+                ),
                 borderRadius: BorderRadius.all(Radius.circular(20))),
           )),
     );
@@ -102,16 +106,16 @@ class _ProfileState extends State<Profile> {
                   ),
                   Center(
                     child: Container(
-                      height: 80,
+                      height: 100,
                       child: CircleAvatar(
-                        radius: 40.0,
-                        backgroundImage: AssetImage("assets/images/user1.png"),
+                        radius: 50.0,
+                        backgroundImage: AssetImage("assets/images/post0.jpg"),
                       ),
                     ),
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'John Doe',
+                    'Jane Doe',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
@@ -166,7 +170,7 @@ class _ProfileState extends State<Profile> {
                         Text('Favourites',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 20,
+                              fontSize: 25,
                             )),
                         Spacer(),
                         InkWell(
@@ -174,6 +178,7 @@ class _ProfileState extends State<Profile> {
                           child: Text(
                             '+Create new list',
                             style: TextStyle(
+                                fontSize: 15,
                                 color: Colors.orange,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -189,7 +194,7 @@ class _ProfileState extends State<Profile> {
                         Text('Publications',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 20,
+                              fontSize: 25,
                             )),
                       ],
                     ),

@@ -48,7 +48,7 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 heightPlaceholder(isMobileScreen),
                 WaveBorderCard(
-                  recipeCardName: "Pancake",
+                  recipeCardName: "Breakfast",
                 ),
                 heightPlaceholder(isMobileScreen),
                 Text(
