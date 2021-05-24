@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:RecipeApp/helper/authenticate.dart';
+import 'package:RecipeApp/services/auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'package:RecipeApp/widget/navitem.dart';
@@ -8,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../services/database.dart';
 import '../widget/bottomnav.dart';
-import 'homepage.dart';
 
 class PublishRecipe extends StatefulWidget {
   @override
@@ -105,6 +106,19 @@ class _PublishRecipeState extends State<PublishRecipe> {
     return ChangeNotifierProvider(
         create: (context) => NavItems(),
         child: Scaffold(
+          appBar: AppBar(
+            leading: GestureDetector(
+              onTap: () {
+                AuthService().signOut();
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => Authenticate()));
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Icon(Icons.exit_to_app),
+              ),
+            ),
+          ),
           resizeToAvoidBottomInset: false,
           body: Container(
             color: Colors.white,

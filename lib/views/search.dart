@@ -17,7 +17,18 @@ class _SearchState extends State<Search> {
       create: (context) => NavItems(),
       child: Scaffold(
         appBar: AppBar(
-          leading: new Container(),
+          leading: GestureDetector(
+            onTap: () {
+              AuthService().signOut();
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => Authenticate()));
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Icon(Icons.exit_to_app),
+              color: Colors.black,
+            ),
+          ),
           elevation: 0,
           backgroundColor: Colors.grey.shade200,
           title: TextFormField(
@@ -34,8 +45,8 @@ class _SearchState extends State<Search> {
           ),
         ),
         body: Container(
-          child: Text('SEARCH CHUCHU'),
-        ),
+            /*  child: Text('SEARCH CHUCHU'), */
+            ),
         bottomNavigationBar: MyBottomNavBar(),
       ),
     );
