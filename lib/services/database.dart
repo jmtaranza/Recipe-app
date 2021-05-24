@@ -24,6 +24,13 @@ class DatabaseMethods {
         .getDocuments();
   }
 
+  searchByRecipe(title) async {
+    return Firestore.instance
+        .collection("recipe")
+        .where('title', isEqualTo: title)
+        .snapshots();
+  }
+
   Future<void> addRecipe(String title, recipeData) {
     Firestore.instance
         .collection("recipe")
@@ -66,6 +73,13 @@ class DatabaseMethods {
   }
 
   getUserPublications(String userName) async {
+    return Firestore.instance
+        .collection("recipe")
+        .where('publishedBy', isEqualTo: userName)
+        .snapshots();
+  }
+
+  getUserRecipes(String userName) async {
     return Firestore.instance
         .collection("recipe")
         .where('publishedBy', isEqualTo: userName)

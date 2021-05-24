@@ -111,7 +111,7 @@ class _FeedState extends State<Feed> {
                         ),
                       ),
                       subtitle: Text(
-                        snapshot.data.documents[index].data['description'],
+                        snapshot.data.documents[index].data['title'],
                       ),
                     ),
                     InkWell(
@@ -170,6 +170,9 @@ class _FeedState extends State<Feed> {
                           ),
                         ],
                       ),
+                    ),
+                    Text(
+                      snapshot.data.documents[index].data['description'],
                     ),
                   ],
                 ),
