@@ -106,7 +106,7 @@ class _FeedState extends State<Feed> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text('mga chuchu chuhcuchcuchcuchcuch'),
+                        Text('Food Recipe Discoveries'),
                         IconButton(
                           icon: Icon(Icons.bookmark_border),
                           iconSize: 30.0,

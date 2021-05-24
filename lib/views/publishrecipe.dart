@@ -112,7 +112,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
             child: Column(
               children: <Widget>[
                 SizedBox(
-                  height: 20,
+                  height: 80,
                 ),
                 Container(
                   child: GestureDetector(

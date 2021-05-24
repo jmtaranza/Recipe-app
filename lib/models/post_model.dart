@@ -17,13 +17,13 @@ final List<Post> posts = [
     authorName: 'Sam Martin',
     authorImageUrl: 'assets/images/user0.png',
     timeAgo: '5 min',
-    imageUrl: 'assets/images/post0.jpg',
+    imageUrl: 'assets/images/garlicbread.jpg',
   ),
   Post(
-    authorName: 'Sam Martin',
-    authorImageUrl: 'assets/images/user0.png',
+    authorName: 'Jane Doe',
+    authorImageUrl: 'assets/images/post0.jpg',
     timeAgo: '10 min',
-    imageUrl: 'assets/images/post1.jpg',
+    imageUrl: 'assets/images/macandcheese.jpg',
   ),
 ];
 
