@@ -34,10 +34,33 @@ class DatabaseMethods {
     });
   }
 
+  Future<void> addFeed(String title, feedData) {
+    Firestore.instance
+        .collection("feed")
+        .document(title)
+        .setData(feedData)
+        .catchError((e) {
+      print(e.toString());
+    });
+  }
+
   getUserPublications(String userName) async {
     return Firestore.instance
         .collection("recipe")
         .where('publishedBy', isEqualTo: userName)
+        .snapshots();
+  }
+
+  getUserFeeds() async {
+    return Firestore.instance.collection("feed").snapshots();
+  }
+
+  getComments(String title) async {
+    return Firestore.instance
+        .collection("chatRoom")
+        .document(title)
+        .collection("chats")
+        .orderBy('time')
         .snapshots();
   }
 }

@@ -1,18 +1,33 @@
+import 'package:RecipeApp/constant.dart';
 import 'package:RecipeApp/models/comment_model.dart';
 import 'package:RecipeApp/models/post_model.dart';
+import 'package:RecipeApp/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ViewPostScreen extends StatefulWidget {
-  final Post post;
+  final String userName;
+  final String title;
+  final String postedBy;
+  final String time;
+  final String imageUrl;
+  final String description;
 
-  ViewPostScreen({this.post});
+  ViewPostScreen(
+      {this.userName,
+      this.imageUrl,
+      this.description,
+      this.postedBy,
+      this.time,
+      this.title});
 
   @override
   _ViewPostScreenState createState() => _ViewPostScreenState();
 }
 
 class _ViewPostScreenState extends State<ViewPostScreen> {
-  Widget _buildComment(int index) {
+  Stream<QuerySnapshot> comments;
+  Widget _buildComment(index, snapshot) {
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: ListTile(
@@ -34,19 +49,21 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
               child: Image(
                 height: 50.0,
                 width: 50.0,
-                image: AssetImage(comments[index].authorImageUrl),
+                image: NetworkImage(widget.imageUrl),
                 fit: BoxFit.cover,
               ),
             ),
           ),
         ),
         title: Text(
-          comments[index].authorName,
+          snapshot.data.documents[index].data['sendBy'],
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
-        subtitle: Text(comments[index].text),
+        subtitle: Text(
+          snapshot.data.documents[index].data['comment'],
+        ),
         trailing: IconButton(
           icon: Icon(
             Icons.favorite_border,
@@ -56,6 +73,35 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
         ),
       ),
     );
+  }
+
+  Widget commentMessages() {
+    return StreamBuilder(
+      stream: comments,
+      builder: (context, snapshot) {
+        return snapshot.hasData
+            ? ListView.builder(
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context, index) {
+                  return _buildComment(index, snapshot);
+                })
+            : Container();
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    getUserComments();
+    super.initState();
+  }
+
+  getUserComments() async {
+    DatabaseMethods().getComments(widget.title).then((snapshots) {
+      setState(() {
+        comments = snapshots;
+      });
+    });
   }
 
   @override
@@ -107,23 +153,23 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                   ),
                                   child: CircleAvatar(
                                     child: ClipOval(
-                                      child: Image(
-                                        height: 50.0,
-                                        width: 50.0,
-                                        image: AssetImage(
-                                            widget.post.authorImageUrl),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
+                                        // child: Image(
+                                        //   height: 50.0,
+                                        //   width: 50.0,
+                                        //   image: AssetImage(
+                                        //       widget.post.authorImageUrl),
+                                        //   fit: BoxFit.cover,
+                                        // ),
+                                        ),
                                   ),
                                 ),
                                 title: Text(
-                                  widget.post.authorName,
+                                  widget.postedBy,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                subtitle: Text(widget.post.timeAgo),
+                                subtitle: Text(widget.time),
                                 trailing: IconButton(
                                   icon: Icon(Icons.more_horiz),
                                   color: Colors.black,
@@ -149,7 +195,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                 ),
                               ],
                               image: DecorationImage(
-                                image: AssetImage(widget.post.imageUrl),
+                                image: NetworkImage(widget.imageUrl),
                                 fit: BoxFit.fitWidth,
                               ),
                             ),
@@ -224,14 +270,8 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                   topRight: Radius.circular(30.0),
                 ),
               ),
-              child: Column(
-                children: <Widget>[
-                  _buildComment(0),
-                  _buildComment(1),
-                  _buildComment(2),
-                  _buildComment(3),
-                  _buildComment(4),
-                ],
+              child: ListView(
+                children: <Widget>[commentMessages()],
               ),
             )
           ],
@@ -286,13 +326,13 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                   ),
                   child: CircleAvatar(
                     child: ClipOval(
-                      child: Image(
-                        height: 48.0,
-                        width: 48.0,
-                        image: AssetImage(widget.post.authorImageUrl),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                        // child: Image(
+                        //   height: 48.0,
+                        //   width: 48.0,
+                        //   image: AssetImage(widget.post.authorImageUrl),
+                        //   fit: BoxFit.cover,
+                        // ),
+                        ),
                   ),
                 ),
                 suffixIcon: Container(
