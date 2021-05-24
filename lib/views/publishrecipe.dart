@@ -106,19 +106,6 @@ class _PublishRecipeState extends State<PublishRecipe> {
     return ChangeNotifierProvider(
         create: (context) => NavItems(),
         child: Scaffold(
-          appBar: AppBar(
-            leading: GestureDetector(
-              onTap: () {
-                AuthService().signOut();
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => Authenticate()));
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Icon(Icons.exit_to_app),
-              ),
-            ),
-          ),
           resizeToAvoidBottomInset: false,
           body: Container(
             color: Colors.white,
