@@ -259,6 +259,17 @@ class _HomepageState extends State<Homepage> {
                   width: double.infinity,
                   height: 200,
                   child: publicationsList(dinner)),
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Text(
+                  'Snacks',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Container(
+                  width: double.infinity,
+                  height: 200,
+                  child: publicationsList(snacks)),
             ],
           ),
         ),

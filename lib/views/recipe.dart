@@ -106,6 +106,10 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
                           width: 600,
                           child: stepsCard(
                               snapshot.data.documents[index].data['steps'])),
+                      Text('Ingredients',
+                          style: TextStyle(
+                            fontSize: 20,
+                          )),
                       Container(
                           width: 600,
                           child: ingredientsCard(snapshot
