@@ -44,7 +44,20 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
       itemBuilder: (context, index) {
         final item = items[index];
         int stepNumber = index + 1;
-        return Text("Step $stepNumber " + item);
+        return Container(
+            color: Colors.orange,
+            child: Row(
+              children: [
+                Text(
+                  "Step #$stepNumber ",
+                  style: TextStyle(fontSize: 20),
+                ),
+                Text(
+                  item,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ));
       },
     );
   }
@@ -58,7 +71,18 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
         final item = items[index]["ingredient"];
         final amount = items[index]["amount"];
         int ingredientNumber = index + 1;
-        return Text("Ingredient $ingredientNumber " + item + " " + amount);
+        return Container(
+            color: Colors.green,
+            child: Row(
+              children: [
+                Text("Ingredient #$ingredientNumber ",
+                    style: TextStyle(fontSize: 20)),
+                SizedBox(width: 30),
+                Text(item + " " + amount,
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              ],
+            ));
       },
     );
   }
@@ -94,26 +118,41 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(20))),
                       ),
-                      Text(snapshot.data.documents[index].data['title'],
-                          style: TextStyle(
-                            fontSize: 30,
-                          )),
-                      Text('Steps',
-                          style: TextStyle(
-                            fontSize: 20,
-                          )),
+                      SizedBox(height: 15),
                       Container(
-                          width: 600,
-                          child: stepsCard(
-                              snapshot.data.documents[index].data['steps'])),
-                      Text('Ingredients',
-                          style: TextStyle(
-                            fontSize: 20,
-                          )),
+                        decoration: BoxDecoration(
+                            color: Colors.yellow,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: Text(
+                            snapshot.data.documents[index].data['title'],
+                            style: TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold)),
+                      ),
+                      SizedBox(height: 10),
                       Container(
-                          width: 600,
-                          child: ingredientsCard(snapshot
-                              .data.documents[index].data['ingredients'])),
+                        color: Colors.grey[300],
+                        child: Column(
+                          children: [
+                            Text('Ingredients',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                )),
+                            Container(
+                                width: 600,
+                                child: ingredientsCard(snapshot.data
+                                    .documents[index].data['ingredients'])),
+                            Text('Steps',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                )),
+                            Container(
+                                width: 600,
+                                child: stepsCard(snapshot
+                                    .data.documents[index].data['steps'])),
+                          ],
+                        ),
+                      ),
                     ],
                   );
                 })
