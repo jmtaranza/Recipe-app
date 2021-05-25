@@ -97,8 +97,19 @@ class DatabaseMethods {
     return Firestore.instance.collection("feed").snapshots();
   }
 
+  getPublications() async {
+    return Firestore.instance.collection("recipe").orderBy('time').snapshots();
+  }
+
   getUserFeedInfo(title) async {
     return Firestore.instance.collection("feed").document(title).snapshots();
+  }
+
+  getRecipeInfo(title) async {
+    return Firestore.instance
+        .collection("recipe")
+        .where('title', isEqualTo: title)
+        .snapshots();
   }
 
   getComments(String title) async {

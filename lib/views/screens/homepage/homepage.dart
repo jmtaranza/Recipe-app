@@ -3,6 +3,7 @@ import 'package:RecipeApp/helper/authenticate.dart';
 import 'package:RecipeApp/helper/helperfunctions.dart';
 import 'package:RecipeApp/services/auth.dart';
 import 'package:RecipeApp/services/database.dart';
+import 'package:RecipeApp/views/recipe.dart';
 import 'package:RecipeApp/widget/bottomnav.dart';
 import 'package:RecipeApp/widget/navitem.dart';
 
@@ -33,6 +34,7 @@ class _HomepageState extends State<Homepage> {
   Stream lunch;
   Stream dinner;
   Stream snacks;
+  Stream all;
   getUserPublications() async {
     DatabaseMethods()
         .getPublicationBasedOnCategory('Breakfast')
@@ -56,13 +58,28 @@ class _HomepageState extends State<Homepage> {
         snacks = snapshots;
       });
     });
+    DatabaseMethods().getPublications().then((snapshots) {
+      setState(() {
+        all = snapshots;
+      });
+    });
   }
 
   publicationCard(title, category, imageUrl) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewRecipeScreen(
+                  userName: widget.userName,
+                  title: title,
+                ),
+              ),
+            );
+          },
           child: Container(
             padding: EdgeInsets.only(right: 15),
             decoration: imageUrl != null
@@ -152,59 +169,57 @@ class _HomepageState extends State<Homepage> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 10.0, vertical: 5.0),
                         child: Container(
-                          width: double.infinity,
-                          height: 450.0,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10.0),
-                                child: Column(
-                                  children: <Widget>[
-                                    InkWell(
-                                      onTap: () {},
-                                      child: Container(
-                                        margin: EdgeInsets.all(10.0),
-                                        width: double.infinity,
-                                        height: 400.0,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(25.0),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black45,
-                                              offset: Offset(0, 5),
-                                              blurRadius: 8.0,
+                            width: double.infinity,
+                            height: 450.0,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                                  child: Column(
+                                    children: <Widget>[
+                                      InkWell(
+                                        onTap: () {},
+                                        child: Container(
+                                          margin: EdgeInsets.all(10.0),
+                                          width: double.infinity,
+                                          height: 400.0,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(25.0),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black45,
+                                                offset: Offset(0, 5),
+                                                blurRadius: 8.0,
+                                              ),
+                                            ],
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                  "https://static.toiimg.com/thumb/53110049.cms?width=1200&height=900"),
+                                              fit: BoxFit.fitWidth,
                                             ),
-                                          ],
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                              "https://static.toiimg.com/thumb/53110049.cms?width=1200&height=900",
-                                            ),
-                                            fit: BoxFit.fitWidth,
                                           ),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'Recipe of the day',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 50,
-                                                fontWeight: FontWeight.bold),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              'Recipe of the day',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 50,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
+                              ],
+                            )),
                       ),
                     )
                   ],

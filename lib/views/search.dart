@@ -1,5 +1,6 @@
 import 'package:RecipeApp/helper/constants.dart';
 import 'package:RecipeApp/services/database.dart';
+import 'package:RecipeApp/views/recipe.dart';
 
 import 'package:RecipeApp/widget/bottomnav.dart';
 import 'package:RecipeApp/widget/navitem.dart';
@@ -112,14 +113,15 @@ class _SearchState extends State<Search> {
                     style: TextStyle(color: Colors.black, fontSize: 16),
                   ),
                   onTap: () {
-                    print('napislit ang title');
-                    initiateView(); // same info raman gi kwaan
-                    /*  recipeList();  dapat ma clear ang gi display ni recipelist unya puli si view recipedata  dapat ang sa gipilian ra*/
-                    viewRecipeData(title, category, imageUrl);
-                    //null iya valuess
-                    /* print(title);
-                    print(category);
-                    print(imageUrl); */
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ViewRecipeScreen(
+                          userName: widget.userName,
+                          title: title,
+                        ),
+                      ),
+                    );
                   },
                 ),
               ),

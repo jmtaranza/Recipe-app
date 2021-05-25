@@ -2,6 +2,7 @@ import 'package:RecipeApp/constant.dart';
 import 'package:RecipeApp/helper/authenticate.dart';
 import 'package:RecipeApp/services/auth.dart';
 import 'package:RecipeApp/services/database.dart';
+import 'package:RecipeApp/views/recipe.dart';
 import 'package:RecipeApp/widget/bottomnav.dart';
 import 'package:RecipeApp/widget/navitem.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
-  final String userName;
+  String userName;
 
   Profile({this.userName});
   @override
@@ -56,7 +57,17 @@ class _ProfileState extends State<Profile> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewRecipeScreen(
+                  userName: widget.userName,
+                  title: title,
+                ),
+              ),
+            );
+          },
           child: Container(
             padding: EdgeInsets.only(right: 15),
             decoration: imageUrl != null
@@ -169,7 +180,9 @@ class _ProfileState extends State<Profile> {
                     radius: 50.0,
                     backgroundColor: Colors.grey,
                     child: Text(
-                      widget.userName.substring(0, 1),
+                      widget.userName.isNotEmpty
+                          ? widget.userName.substring(0, 1)
+                          : 'null'.substring(0, 1),
                       style: TextStyle(color: Colors.black, fontSize: 25),
                     ),
                   ),
