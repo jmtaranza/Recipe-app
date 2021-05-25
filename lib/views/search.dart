@@ -20,8 +20,11 @@ class _SearchState extends State<Search> {
   int numOfPublications = 0;
   TextEditingController searchEditingController = new TextEditingController();
   Stream searchResultSnapshot;
+  Stream viewResultSnapshot;
   bool isLoading = false;
   bool haveRecipeSearched = false;
+  String recipeData;
+  String title;
 
   Widget recipeList() {
     return StreamBuilder(
@@ -34,6 +37,26 @@ class _SearchState extends State<Search> {
                 itemBuilder: (context, index) {
                   return recipeTile(
                     snapshot.data.documents[index].data["title"],
+                  );
+                })
+            : Container();
+      },
+    );
+  }
+
+  Widget viewrecipeList() {
+    return StreamBuilder(
+      stream: viewResultSnapshot,
+      builder: (context, snapshot) {
+        return snapshot.hasData
+            ? ListView.builder(
+                itemCount: snapshot.data.documents.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return viewrecipeTile(
+                    snapshot.data.documents[index].data["title"],
+                    snapshot.data.documents[index].data["category"],
+                    snapshot.data.documents[index].data["imageUrl"],
                   );
                 })
             : Container();
@@ -57,6 +80,18 @@ class _SearchState extends State<Search> {
         });
       });
     }
+  }
+
+  initiateView() async {
+    /*  DatabaseMethods().viewByRecipe(title, recipeData).then((snapshots) {
+      setState(() {
+        print('naka initiate view');
+        viewResultSnapshot = snapshots;
+        print("$viewResultSnapshot");
+        isLoading = false;
+        haveRecipeSearched = true;
+      });
+    }); */
   }
 
   Widget recipeTile(String title) {
@@ -90,107 +125,41 @@ class _SearchState extends State<Search> {
                 ],
               ),
               onTap: () {
-                viewRecipe();
+                print('test');
+                initiateView(); // error pako diri sa pag sud sa database
+                viewrecipeList();
               }),
         ],
       ),
     );
   }
 
-  getChatRoomId(String a, String b) {
-    if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
-      return "$b\_$a";
-    } else {
-      return "$a\_$b";
-    }
-  }
-
-  getUserRecipes() async {
-    DatabaseMethods().getUserRecipes(Constants.myName).then((snapshots) {
-      setState(() {
-        recipes = snapshots;
-        print(
-            "we got the data + ${recipes.toString()} this is name  ${Constants.myName}");
-      });
-    });
-    QuerySnapshot result = await Firestore.instance
-        .collection('recipe')
-        .where('publishedBy', isEqualTo: widget.userName)
-        .getDocuments();
-    List<DocumentSnapshot> result2 = result.documents;
-    numOfPublications = result2.length;
-    print(numOfPublications);
-  }
-
-  Stream recipes;
-  viewRecipe() {
-    print('test tapped'); //kaabot
-    return StreamBuilder(
-      stream: recipes,
-      builder: (context, snapshot) {
-        return snapshot.hasData
-            ? ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: snapshot.data.documents.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return recipeCard(
-                    snapshot.data.documents[index].data['title'],
-                    snapshot.data.documents[index].data["category"],
-                    snapshot.data.documents[index].data["imageUrl"],
-                  );
-                })
-            : Container(
-                child: Text('No searched recipe yet'),
-              );
-      },
-    );
-  }
-
-  recipeCard(title, category, imageUrl) {
-    print(title);
-    print(category); //dili pa print idk
-    /*  return InkWell(
-      onTap: () {},
-      child: Container(
-        color: Colors.red,
-        width: MediaQuery.of(context).size.width - 240.0,
-        height: MediaQuery.of(context).size.height - 50.0,
-        decoration: imageUrl != null
-            ? BoxDecoration(
-                image: DecorationImage(
-                    image: NetworkImage(imageUrl), fit: BoxFit.cover),
-                borderRadius: BorderRadius.all(Radius.circular(20)))
-            : BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.all(Radius.circular(20))),
-        child: Column(
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-                fontSize: 50,
+  Widget viewrecipeTile(String title, String category, String imageUrl) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(color: Colors.black, fontSize: 16),
               ),
-            ),
-            Text(
-              category,
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-                fontSize: 50,
+              Text(
+                category,
+                style: TextStyle(color: Colors.black, fontSize: 16),
               ),
-            )
-          ],
-        ),
+              Container(child: Image.network(imageUrl)),
+            ],
+          ),
+        ],
       ),
-    ); */
+    );
   }
 
   @override
   void initState() {
-    getUserRecipes();
     super.initState();
   }
 
