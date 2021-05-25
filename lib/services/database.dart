@@ -109,4 +109,11 @@ class DatabaseMethods {
         .orderBy('time')
         .snapshots();
   }
+
+  getPublicationBasedOnCategory(String category) async {
+    return Firestore.instance
+        .collection("recipe")
+        .where('category', isEqualTo: category)
+        .snapshots();
+  }
 }

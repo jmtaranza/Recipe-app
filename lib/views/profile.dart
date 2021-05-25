@@ -69,9 +69,6 @@ class _ProfileState extends State<Profile> {
                     borderRadius: BorderRadius.all(Radius.circular(20))),
             child: Column(
               children: [
-                SizedBox(
-                  height: 85,
-                ),
                 Text(
                   title,
                   style: TextStyle(
@@ -262,7 +259,10 @@ class _ProfileState extends State<Profile> {
                   ],
                 ),
               ),
-              Flexible(child: publicationsList()),
+              Container(
+                  width: double.infinity,
+                  height: 200,
+                  child: Flexible(child: publicationsList())),
             ],
           ),
           bottomNavigationBar: MyBottomNavBar(userName: widget.userName),
