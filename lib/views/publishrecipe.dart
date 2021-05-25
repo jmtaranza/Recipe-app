@@ -146,18 +146,18 @@ class _PublishRecipeState extends State<PublishRecipe> {
                         ],
                       ),
                     ),
-                    child: CircleAvatar(
-                      child: Container(
-                        child: _imageFile != null
-                            ? Image.file(_imageFile)
-                            : Icon(
-                                Icons.add_a_photo,
-                                size: 30.0,
-                                color: Colors.white,
-                              ),
-                      ),
-                      radius: 80,
-                      backgroundColor: Colors.red[200],
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.red[200])),
+                      height: 250,
+                      width: 250,
+                      child: _imageFile != null
+                          ? Image.file(_imageFile)
+                          : Icon(
+                              Icons.file_upload,
+                              size: 30.0,
+                              color: Colors.red[200],
+                            ),
                     ),
                   ),
                 ),

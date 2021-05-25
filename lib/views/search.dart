@@ -21,14 +21,17 @@ class _SearchState extends State<Search> {
   TextEditingController searchEditingController = new TextEditingController();
   Stream searchResultSnapshot;
   Stream viewResultSnapshot;
+  Stream viewDataSnapshot;
   bool isLoading = false;
   bool haveRecipeSearched = false;
   String recipeData;
   String title;
+  String category;
+  String imageUrl;
 
-  Widget recipeList() {
+  Widget viewrecipeList() {
     return StreamBuilder(
-      stream: searchResultSnapshot,
+      stream: viewResultSnapshot,
       builder: (context, snapshot) {
         return snapshot.hasData
             ? ListView.builder(
@@ -44,7 +47,7 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Widget viewrecipeList() {
+  Widget viewRecipeData(String title, String category, String imageUrl) {
     return StreamBuilder(
       stream: viewResultSnapshot,
       builder: (context, snapshot) {
@@ -83,15 +86,15 @@ class _SearchState extends State<Search> {
   }
 
   initiateView() async {
-    /*  DatabaseMethods().viewByRecipe(title, recipeData).then((snapshots) {
+    DatabaseMethods().viewByRecipe(title, recipeData).then((snapshots) {
       setState(() {
         print('naka initiate view');
         viewResultSnapshot = snapshots;
         print("$viewResultSnapshot");
-        isLoading = false;
         haveRecipeSearched = true;
+        print(recipeData);
       });
-    }); */
+    });
   }
 
   Widget recipeTile(String title) {
@@ -102,33 +105,27 @@ class _SearchState extends State<Search> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: TextStyle(color: Colors.black, fontSize: 16),
+              Container(
+                child: GestureDetector(
+                  child: Text(
+                    title,
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                  onTap: () {
+                    print('napislit ang title');
+                    initiateView(); // same info raman gi kwaan
+                    /*  recipeList();  dapat ma clear ang gi display ni recipelist unya puli si view recipedata  dapat ang sa gipilian ra*/
+                    viewRecipeData(title, category, imageUrl);
+                    //null iya valuess
+                    /* print(title);
+                    print(category);
+                    print(imageUrl); */
+                  },
+                ),
               ),
             ],
           ),
           Spacer(),
-          GestureDetector(
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(24)),
-                    child: Text(
-                      "View",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () {
-                print('test');
-                initiateView(); // error pako diri sa pag sud sa database
-                viewrecipeList();
-              }),
         ],
       ),
     );
@@ -150,7 +147,7 @@ class _SearchState extends State<Search> {
                 category,
                 style: TextStyle(color: Colors.black, fontSize: 16),
               ),
-              Container(child: Image.network(imageUrl)),
+              Container(height: 50, width: 50, child: Image.network(imageUrl)),
             ],
           ),
         ],
@@ -181,9 +178,10 @@ class _SearchState extends State<Search> {
                 child: Column(
                   children: [
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                      color: Color(0x54FFFFFF),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24,
+                      ),
+                      color: Colors.grey[100],
                       child: Row(
                         children: [
                           Expanded(
@@ -222,11 +220,28 @@ class _SearchState extends State<Search> {
                         ],
                       ),
                     ),
-                    recipeList(),
+                    viewrecipeList(),
+                    /*    viewRecipeData(title), */ //dri ra ma display tanan
                   ],
                 ),
               ),
+        floatingActionButton: GestureDetector(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(24)),
+              child: Text(
+                "View",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+            onTap: () {
+              print('test');
+              initiateView();
+            }),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         bottomNavigationBar: MyBottomNavBar(userName: widget.userName),
+        resizeToAvoidBottomInset: false,
       ),
     );
   }

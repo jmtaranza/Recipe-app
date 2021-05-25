@@ -33,7 +33,7 @@ class DatabaseMethods {
 
   viewByRecipe(title, recipeData) async {
     return Firestore.instance
-        .collection(recipeData)
+        .collection("recipe")
         .where('recipeData', isEqualTo: recipeData)
         .snapshots();
   } //kani wa koy sure sa ppg map2 sa recipedata pag kuha niya tanan info

@@ -59,8 +59,6 @@ class _ProfileState extends State<Profile> {
           onTap: () {},
           child: Container(
             padding: EdgeInsets.only(right: 15),
-            width: MediaQuery.of(context).size.width - 240.0,
-            height: MediaQuery.of(context).size.height - 50.0,
             decoration: imageUrl != null
                 ? BoxDecoration(
                     image: DecorationImage(
@@ -71,20 +69,23 @@ class _ProfileState extends State<Profile> {
                     borderRadius: BorderRadius.all(Radius.circular(20))),
             child: Column(
               children: [
+                SizedBox(
+                  height: 85,
+                ),
                 Text(
                   title,
                   style: TextStyle(
-                    color: Colors.red,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 50,
+                    fontSize: 30,
                   ),
                 ),
                 Text(
                   category,
                   style: TextStyle(
-                    color: Colors.red,
+                    color: Colors.orange,
                     fontWeight: FontWeight.bold,
-                    fontSize: 50,
+                    fontSize: 35,
                   ),
                 )
               ],
